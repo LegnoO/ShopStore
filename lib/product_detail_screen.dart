@@ -1,9 +1,13 @@
-import 'package:final_project/home_page_widget.dart';
+import 'package:final_project/cart_list_screen.dart';
+import 'package:final_project/home_page_screen.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:final_project/component/bottom_navigation_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:final_project/models/CartItem.dart';
+import 'package:final_project/providers/cart_provider.dart';
+import 'package:final_project/models/Product.dart';
 
 class ProductDetailModel extends FlutterFlowModel<ProductDetailWidget> {
   ///  State fields for stateful widgets in this page.
@@ -24,8 +28,10 @@ class ProductDetailModel extends FlutterFlowModel<ProductDetailWidget> {
 }
 
 class ProductDetailWidget extends StatefulWidget {
-  final int id;
-  const ProductDetailWidget({Key? key, required this.id}) : super(key: key);
+  final Product product;
+  const ProductDetailWidget({Key? key, required this.product})
+      : super(key: key);
+
 // Map<dynamic>product;
   @override
   _ProductDetailWidgetState createState() => _ProductDetailWidgetState();
@@ -35,7 +41,8 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
   late ProductDetailModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   int _currentIndex = 0;
-
+  List<CartItem> cartList = [];
+  
   void _onTabTapped(int index) {
     setState(() {
       _currentIndex = 1;
@@ -49,30 +56,23 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
         break;
       case 1:
         // Navigate to Library page
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const ProductDetailWidget(id: 0)));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomePageWidget()));
         break;
     }
   }
 
-  void fetchDataFromFirebase() async {
-    DatabaseReference ref =
-        FirebaseDatabase.instance.ref('products/${widget.id}');
-    DataSnapshot snapshot = await ref.get();
 
-    if (snapshot.exists) {
-      print(snapshot.value);
-    } else {
-      print('No data available.');
-    }
+  void addToCart(product) {
+    CartProvider cartItems = Provider.of<CartProvider>(context, listen: false);
+    cartItems.addToCart(product);
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const ShoppingcartWidget()));
   }
 
   @override
   void initState() {
     super.initState();
-    fetchDataFromFirebase();
     _model = createModel(context, () => ProductDetailModel());
   }
 
@@ -109,7 +109,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
           backgroundColor: const Color(0xFFFFA113),
           automaticallyImplyLeading: true,
           title: Text(
-            'Trang sản phẩm',
+            'Thông tin sản phẩm',
             textAlign: TextAlign.center,
             style: FlutterFlowTheme.of(context).headlineMedium.override(
                   fontFamily: 'Outfit',
@@ -144,10 +144,23 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.network(
-                                  'https://picsum.photos/seed/661/600',
+                                  widget.product.imageUrl,
                                   width: 399,
                                   height: 200,
                                   fit: BoxFit.cover,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      // Image is fully loaded
+                                      return child;
+                                    } else {
+                                      // Image is still loading, show a loading indicator
+                                      return Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                  },
                                 ),
                               ),
                             ),
@@ -158,7 +171,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                'DELL XPS 13\n9310-70234076',
+                                widget.product.name,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -449,7 +462,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                           ),
                           FFButtonWidget(
                             onPressed: () {
-                              print('Button pressed ...');
+                              addToCart(widget.product);
                             },
                             text: 'Thêm vào giỏ hàng',
                             options: FFButtonOptions(

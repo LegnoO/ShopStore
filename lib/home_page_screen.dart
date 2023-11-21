@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:final_project/component/bottom_navigation_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
     as smooth_page_indicator;
+import 'package:final_project/models/CartItem.dart';
+import 'package:final_project/models/Product.dart';
+import 'package:final_project/providers/cart_provider.dart';
 
 class HomePageModel extends FlutterFlowModel<HomePageWidget> {
   final unfocusNode = FocusNode();
@@ -39,9 +43,9 @@ class HomePageWidget extends StatefulWidget {
 class _HomePageWidgetState extends State<HomePageWidget> {
   late HomePageModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  String? valueTest = '';
-  List<dynamic>? productList = [];
   int _currentIndex = 0;
+
+  List<Product> productList = [];
 
   void _onTabTapped(int index) {
     setState(() {
@@ -56,10 +60,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         break;
       case 1:
         // Navigate to Library page
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const ProductDetailWidget(id: 0)));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomePageWidget()));
         break;
     }
   }
@@ -67,18 +69,23 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void fetchDataFromFirebase() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('products');
     DataSnapshot snapshot = await ref.get();
-    final snapshot2 = await ref.child('products').once();
 
     if (snapshot.exists) {
-      productList = snapshot.value as List<dynamic>?;
+      dynamic data = snapshot.value;
 
-      if (productList != null) {
-        setState(() {
-          valueTest = productList?[0]['title'].toString();
-        });
-      }
-    } else {
-      print('No data available.');
+      setState(() {
+        productList = List<Product>.from(data.map((item) {
+          return Product(
+            item['id'],
+            item['name'],
+            item['price'],
+            item['imageUrl'],
+            item['category'],
+            item['brand'],
+            item['guaranteed'],
+          );
+        }));
+      });
     }
   }
 
@@ -86,7 +93,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => HomePageModel());
-
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
     fetchDataFromFirebase();
@@ -101,6 +107,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+    List<CartItem> cartItems = cartProvider.cartItems;
     if (isiOS) {
       SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
@@ -373,7 +381,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           ],
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            print(cartItems);
+                          },
                           child: Text(
                             'See all',
                             style: FlutterFlowTheme.of(context).bodyMedium,
@@ -399,17 +409,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 padding: EdgeInsets.zero,
                                 primary: false,
                                 scrollDirection: Axis.horizontal,
-                                itemCount: productList?.length ?? 0,
+                                itemCount: productList.length,
                                 itemBuilder: (context, index) {
-                                  Map<String, dynamic> product =
-                                      productList![index];
                                   return GestureDetector(
                                     onTap: () {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  ProductDetailWidget(id: 0)));
+                                                  ProductDetailWidget(
+                                                      product:
+                                                          productList[index])));
                                     },
                                     child: Padding(
                                       padding:
@@ -445,7 +455,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                 borderRadius:
                                                     BorderRadius.circular(8),
                                                 child: Image.network(
-                                                  product['imageUrl'],
+                                                  productList[index].imageUrl,
                                                   width: MediaQuery.of(context)
                                                       .size
                                                       .width,
@@ -461,7 +471,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                   Opacity(
                                                     opacity: 0.7,
                                                     child: Text(
-                                                      product['category'],
+                                                      productList[index]
+                                                          .category,
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyMedium
@@ -475,7 +486,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    product['title'],
+                                                    productList[index].name,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyMedium
@@ -515,7 +526,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                 ),
                                                       ),
                                                       Text(
-                                                        product['price']
+                                                        productList[index]
+                                                            .price
                                                             .toString(),
                                                         style:
                                                             FlutterFlowTheme.of(
