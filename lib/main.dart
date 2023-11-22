@@ -1,11 +1,11 @@
-import 'package:final_project/home_page_screen.dart';
-import 'package:final_project/product_detail_screen.dart';
+import 'package:final_project/providers/user_provider.dart';
+import 'package:final_project/screen/home_page_screen.dart';
+import 'package:final_project/screen/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:final_project/models/CartItem.dart';
 import 'package:final_project/providers/cart_provider.dart';
-import 'package:final_project/cart_list_screen.dart';
+import 'package:final_project/screen/cart_list_screen.dart';
 import 'package:final_project/screen/login_screen.dart';
 
 Future<void> main() async {
@@ -22,8 +22,15 @@ Future<void> main() async {
       storageBucket: 'flutter-vlu.appspot.com',
     ),
   );
-  runApp(ChangeNotifierProvider(
-      create: (context) => CartProvider(), child: const MyApp()));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

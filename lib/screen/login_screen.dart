@@ -1,14 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:final_project/screen/home_page_screen.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:final_project/providers/user_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:final_project/Auth.dart';
 
 class LoginAccountModel extends FlutterFlowModel<LoginAccountWidget> {
   ///  State fields for stateful widgets in this page.
@@ -60,15 +57,17 @@ class _LoginAccountWidgetState extends State<LoginAccountWidget>
   Future<void> _login() async {
     String email = _model.emailAddressController.text;
     String password = _model.passwordController.text;
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      User? user = userCredential.user;
-      String? refreshToken = user?.refreshToken;
-      print("$user");
-    } on FirebaseAuthException catch (e) {
-      print(e);
+
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+
+    await userProvider.login(email, password);
+    
+    if (userProvider.isLogged()) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const HomePageWidget()));
     }
+
     // user?.updateDisplayName("test");
   }
 

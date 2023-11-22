@@ -1,4 +1,5 @@
-import 'package:final_project/product_detail_screen.dart';
+import 'package:final_project/screen/cart_list_screen.dart';
+import 'package:final_project/screen/product_detail_screen.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,14 +55,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     switch (index) {
       case 0:
-        // Navigate to Home page
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const HomePageWidget()));
         break;
       case 1:
-        // Navigate to Library page
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const HomePageWidget()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ShoppingcartWidget()));
         break;
     }
   }
@@ -125,10 +126,30 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        bottomNavigationBar: CustomBottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: _onTabTapped,
+        bottomNavigationBar:  Container(
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        color: Colors.blue,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            buildNavItem(0, Icons.home, () {
+              setState(() {
+                _currentIndex = 0;
+              });
+            }),
+            buildNavItem(1, Icons.shopping_cart, () {
+              setState(() {
+                _currentIndex = 1;
+              });
+            }),
+            buildNavItem(2, Icons.person, () {
+              setState(() {
+                _currentIndex = 2;
+              });
+            }),
+          ],
         ),
+      ),
         appBar: AppBar(
           backgroundColor: const Color(0xFFFFA113),
           automaticallyImplyLeading: false,
@@ -572,3 +593,4 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     );
   }
 }
+

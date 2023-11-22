@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:final_project/models/CartItem.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
 import '../models/Product.dart';
 
 class CartProvider extends ChangeNotifier {
@@ -30,9 +29,11 @@ class CartProvider extends ChangeNotifier {
   }
 
   int totalPrice() {
-    int totalPrice = cartItems
-        .map((CartItem item) => item.price * item.quantity)
-        .reduce((int value, int element) => value + element);
+    int totalPrice = cartItems.isNotEmpty
+        ? cartItems
+            .map((CartItem item) => item.price * item.quantity)
+            .reduce((int value, int element) => value + element)
+        : 0;
     return totalPrice;
   }
 
@@ -42,6 +43,7 @@ class CartProvider extends ChangeNotifier {
           .firstWhere((existingCartItem) => existingCartItem.id == item.id);
       cartItems.remove(existingItem);
     }
+    notifyListeners();
   }
 
   void increaseQuantity(CartItem item) {
@@ -50,7 +52,7 @@ class CartProvider extends ChangeNotifier {
           .firstWhere((existingCartItem) => existingCartItem.id == item.id);
       existingItem.quantity++;
     }
-
+    totalPrice();
     notifyListeners();
   }
 
@@ -62,11 +64,12 @@ class CartProvider extends ChangeNotifier {
         existingItem.quantity--;
       }
     }
-
+    totalPrice();
     notifyListeners();
   }
 
   List<CartItem> getState() {
+    notifyListeners();
     return cartItems;
   }
 

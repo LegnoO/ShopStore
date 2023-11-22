@@ -1,5 +1,5 @@
-import 'package:final_project/cart_list_screen.dart';
-import 'package:final_project/home_page_screen.dart';
+import 'package:final_project/screen/cart_list_screen.dart';
+import 'package:final_project/screen/home_page_screen.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,12 +40,12 @@ class ProductDetailWidget extends StatefulWidget {
 class _ProductDetailWidgetState extends State<ProductDetailWidget> {
   late ProductDetailModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   List<CartItem> cartList = [];
-  
+
   void _onTabTapped(int index) {
     setState(() {
-      _currentIndex = 1;
+      _currentIndex = index;
     });
 
     switch (index) {
@@ -61,7 +61,6 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
         break;
     }
   }
-
 
   void addToCart(product) {
     CartProvider cartItems = Provider.of<CartProvider>(context, listen: false);
@@ -101,10 +100,6 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        bottomNavigationBar: CustomBottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: _onTabTapped,
-        ),
         appBar: AppBar(
           backgroundColor: const Color(0xFFFFA113),
           automaticallyImplyLeading: true,
