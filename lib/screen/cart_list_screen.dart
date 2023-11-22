@@ -26,7 +26,6 @@ class ShoppingcartWidget extends StatefulWidget {
 class _ShoppingcartWidgetState extends State<ShoppingcartWidget> {
   late ShoppingcartModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late CartProvider cartProvider;
   int loadScreen() {
     return Provider.of<CartProvider>(context, listen: false).totalPrice();
   }

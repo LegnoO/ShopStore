@@ -4,10 +4,10 @@ Widget buildNavItem(int index, IconData icon, VoidCallback onTapCallback) {
   return InkWell(
     onTap: onTapCallback,
     child: Container(
-      padding: EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
       child: Icon(
         icon,
-        color: Colors.white,
+        color: Colors.grey,
       ),
     ),
   );

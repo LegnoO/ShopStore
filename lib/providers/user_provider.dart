@@ -9,6 +9,8 @@ class UserProvider extends ChangeNotifier {
         .signInWithEmailAndPassword(email: email, password: password);
     user = userCredential.user;
     // String? refreshToken = user?.refreshToken;
+
+    print(user);
     notifyListeners();
   }
 

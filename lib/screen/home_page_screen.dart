@@ -48,25 +48,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   List<Product> productList = [];
 
-  void _onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const HomePageWidget()));
-        break;
-      case 1:
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const ShoppingcartWidget()));
-        break;
-    }
-  }
-
   void fetchDataFromFirebase() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref('products');
     DataSnapshot snapshot = await ref.get();
@@ -126,30 +107,38 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        bottomNavigationBar:  Container(
-        padding: EdgeInsets.symmetric(vertical: 10.0),
-        color: Colors.blue,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            buildNavItem(0, Icons.home, () {
-              setState(() {
-                _currentIndex = 0;
-              });
-            }),
-            buildNavItem(1, Icons.shopping_cart, () {
-              setState(() {
-                _currentIndex = 1;
-              });
-            }),
-            buildNavItem(2, Icons.person, () {
-              setState(() {
-                _currentIndex = 2;
-              });
-            }),
-          ],
+        bottomNavigationBar: Container(
+          padding: EdgeInsets.symmetric(vertical: 10.0),
+          color: Colors.white70,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildNavItem(0, Icons.home, () {
+                setState(() {
+                  _currentIndex = 0;
+                });
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomePageWidget()));
+              }),
+              buildNavItem(1, Icons.shopping_cart, () {
+                setState(() {
+                  _currentIndex = 1;
+                });
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ShoppingcartWidget()));
+              }),
+              buildNavItem(2, Icons.person, () {
+                setState(() {
+                  _currentIndex = 2;
+                });
+              }),
+            ],
+          ),
         ),
-      ),
         appBar: AppBar(
           backgroundColor: const Color(0xFFFFA113),
           automaticallyImplyLeading: false,
@@ -593,4 +582,3 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     );
   }
 }
-

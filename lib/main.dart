@@ -1,12 +1,9 @@
 import 'package:final_project/providers/user_provider.dart';
-import 'package:final_project/screen/home_page_screen.dart';
-import 'package:final_project/screen/product_detail_screen.dart';
+import 'package:final_project/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:final_project/providers/cart_provider.dart';
-import 'package:final_project/screen/cart_list_screen.dart';
-import 'package:final_project/screen/login_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,12 +37,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginAccountWidget(),
-      routes: {
-        '/homepage': (context) => const HomePageWidget(),
-        '/cart': (context) => const ShoppingcartWidget(),
-        // '/product-detail': (context) => const ProductDetailWidget(),
-      },
+      home: ProfileWidget(),
     );
   }
 }
