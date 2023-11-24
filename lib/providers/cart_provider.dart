@@ -13,15 +13,18 @@ class CartProvider extends ChangeNotifier {
         existingItem.quantity += 1;
       } else {
         CartItem cartItem = CartItem(
-          item.id,
-          item.name,
-          item.price,
-          1,
-          item.imageUrl,
-          item.category,
-          item.brand,
-          item.guaranteed,
-        );
+            item.id,
+            item.name,
+            item.price,
+            1,
+            item.imageUrl,
+            item.category,
+            item.brand,
+            item.guaranteed,
+            item.color,
+            item.status,
+            item.description,
+            item.best_selling);
         cartItems.add(cartItem);
       }
     }

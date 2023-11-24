@@ -144,79 +144,80 @@ class _ShoppingcartWidgetState extends State<ShoppingcartWidget> {
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
                                             Expanded(
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  8, 8, 8, 8),
-                                                      child: Container(
-                                                        width: 100,
-                                                        height: 100,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryBackground,
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Text(
-                                                              cartItems[index]
-                                                                  .name,
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMedium
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        'Urbanist',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                  ),
-                                                            ),
-                                                            FlutterFlowIconButton(
-                                                              borderColor: Colors
-                                                                  .transparent,
-                                                              borderRadius: 20,
-                                                              borderWidth: 1,
-                                                              buttonSize: 36,
-                                                              icon: Icon(
-                                                                Icons.close,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryText,
-                                                                size: 18,
-                                                              ),
-                                                              onPressed: () {
-                                                                setState(() {
-                                                                  cartProvider.removeCartItem(
-                                                                      cartItems[
-                                                                          index]);
-                                                                });
-                                                              },
-                                                            ),
-                                                          ],
-                                                        ),
+                                                child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      width: 280,
+                                                      decoration:
+                                                          BoxDecoration(),
+                                                      child: Text(
+                                                        cartItems[index].name,
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Urbanist',
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 1,
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    FlutterFlowIconButton(
+                                                      borderRadius: 20,
+                                                      borderWidth: 1,
+                                                      buttonSize: 36,
+                                                      icon: Icon(
+                                                        Icons.close,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                        size: 18,
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          cartProvider
+                                                              .removeCartItem(
+                                                                  cartItems[
+                                                                      index]);
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            )),
                                             Expanded(
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,

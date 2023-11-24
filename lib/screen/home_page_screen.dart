@@ -1,5 +1,6 @@
 import 'package:final_project/screen/cart_list_screen.dart';
 import 'package:final_project/screen/product_detail_screen.dart';
+import 'package:final_project/screen/profile_screen.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,8 +66,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             item['category'],
             item['brand'],
             item['guaranteed'],
+            item['color'],
+            item['status'],
+            item['description'],
+            item['best_selling'],
           );
-        }));
+        })).where((product) => product.best_selling == true).toList();
       });
     }
   }
@@ -89,8 +94,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    CartProvider cartProvider = Provider.of<CartProvider>(context);
-    List<CartItem> cartItems = cartProvider.cartItems;
     if (isiOS) {
       SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
@@ -135,6 +138,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 setState(() {
                   _currentIndex = 2;
                 });
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProfileWidget()));
               }),
             ],
           ),
@@ -212,7 +219,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   shape: BoxShape.circle,
                                 ),
                                 child: Image.network(
-                                  'https://picsum.photos/seed/959/600',
+                                  'https://p1.hiclipart.com/preview/649/933/129/ecommerce-logo-online-shopping-retail-sales-online-and-offline-shopping-cart-internet-online-auction-png-clipart.jpg',
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -391,9 +398,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           ],
                         ),
                         GestureDetector(
-                          onTap: () {
-                            print(cartItems);
-                          },
+                          onTap: () {},
                           child: Text(
                             'See all',
                             style: FlutterFlowTheme.of(context).bodyMedium,
@@ -507,6 +512,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 2,
                                                   ),
                                                   Row(
                                                     mainAxisSize:

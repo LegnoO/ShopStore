@@ -169,41 +169,59 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  widget.product.name,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Urbanist',
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.end,
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      widget.product.price.toString(),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Urbanist',
-                                            color: const Color(0xFFFFA113),
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                    Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth: 230,
+                                      ),
+                                      decoration: BoxDecoration(),
+                                      child: Text(
+                                        widget.product.name,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'Urbanist',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
                                     ),
-                                    Text(
-                                      '\$',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Urbanist',
-                                            color: const Color(0xFFFFA113),
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Text(
+                                          widget.product.price.toString(),
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Urbanist',
+                                                color: Color(0xFFFFA113),
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                        ),
+                                        Text(
+                                          '\$',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Urbanist',
+                                                color: Color(0xFFFFA113),
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -225,7 +243,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
-                                        text: 'widget.product.name ',
+                                        text: '${widget.product.name} ',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -250,7 +268,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Text(
-                                  'Thông số kỹ thuật ',
+                                  'Thông số kỹ thuật',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -280,7 +298,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
-                                                  text: 'Thương hiệu:   ',
+                                                  text: 'Thương hiệu:    ',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -317,7 +335,8 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
-                                                  text: 'Model:               ',
+                                                  text:
+                                                      'Model:                 ',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -330,8 +349,8 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                                             FontWeight.bold,
                                                       ),
                                                 ),
-                                                const TextSpan(
-                                                  text: 'build different.',
+                                                TextSpan(
+                                                  text: widget.product.category,
                                                   style: TextStyle(
                                                     fontSize: 20,
                                                   ),
@@ -354,7 +373,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
-                                                  text: 'Bảo hành:         ',
+                                                  text: 'Tình trạng           ',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -367,8 +386,8 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                                             FontWeight.bold,
                                                       ),
                                                 ),
-                                                const TextSpan(
-                                                  text: 'build different.',
+                                                TextSpan(
+                                                  text: widget.product.status,
                                                   style: TextStyle(
                                                     fontSize: 20,
                                                   ),
@@ -391,7 +410,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
-                                                  text: 'Màu sắc:           ',
+                                                  text: 'Bảo hành            ',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -404,8 +423,9 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                                             FontWeight.bold,
                                                       ),
                                                 ),
-                                                const TextSpan(
-                                                  text: 'build different.',
+                                                TextSpan(
+                                                  text:
+                                                      widget.product.guaranteed,
                                                   style: TextStyle(
                                                     fontSize: 20,
                                                   ),
@@ -428,7 +448,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
-                                                  text: 'Chất liệu:          ',
+                                                  text: 'Màu sắc:            ',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -441,8 +461,8 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                                             FontWeight.bold,
                                                       ),
                                                 ),
-                                                const TextSpan(
-                                                  text: 'build different.',
+                                                TextSpan(
+                                                  text: widget.product.color,
                                                   style: TextStyle(
                                                     fontSize: 20,
                                                   ),
@@ -460,33 +480,37 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                 ),
                               ],
                             ),
-                            FFButtonWidget(
-                              onPressed: () {
-                                addToCart(widget.product);
-                              },
-                              text: 'Thêm vào giỏ hàng',
-                              options: FFButtonOptions(
-                                width: double.infinity,
-                                height: 40,
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    24, 0, 24, 0),
-                                iconPadding:
-                                    const EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 0, 0),
-                                color: const Color(0xFFFFA113),
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      fontFamily: 'Urbanist',
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    ),
-                                elevation: 3,
-                                borderSide: const BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1,
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 64, 0, 0),
+                              child: FFButtonWidget(
+                                onPressed: () {
+                                  addToCart(widget.product);
+                                },
+                                text: 'Thêm vào giỏ hàng',
+                                options: FFButtonOptions(
+                                  width: double.infinity,
+                                  height: 40,
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      24, 0, 24, 0),
+                                  iconPadding:
+                                      const EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 0, 0),
+                                  color: const Color(0xFFFFA113),
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .override(
+                                        fontFamily: 'Urbanist',
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                      ),
+                                  elevation: 3,
+                                  borderSide: const BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                borderRadius: BorderRadius.circular(12),
                               ),
                             )
                           ].divide(const SizedBox(height: 16)),

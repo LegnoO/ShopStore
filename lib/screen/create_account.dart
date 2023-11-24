@@ -1,12 +1,29 @@
+import 'package:final_project/screen/login_screen.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-class ChangePasswordModel extends FlutterFlowModel<ChangePasswordWidget> {
+class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
+  // State field(s) for name widget.
+  FocusNode? nameFocusNode;
+  TextEditingController? nameController;
+  String? Function(BuildContext, String?)? nameControllerValidator;
+  // State field(s) for phone widget.
+  FocusNode? phoneFocusNode;
+  TextEditingController? phoneController;
+  String? Function(BuildContext, String?)? phoneControllerValidator;
+  // State field(s) for emailAddress widget.
+  FocusNode? emailAddressFocusNode;
+  TextEditingController? emailAddressController;
+  String? Function(BuildContext, String?)? emailAddressControllerValidator;
   // State field(s) for password widget.
   FocusNode? passwordFocusNode;
   TextEditingController? passwordController;
@@ -14,9 +31,9 @@ class ChangePasswordModel extends FlutterFlowModel<ChangePasswordWidget> {
   String? Function(BuildContext, String?)? passwordControllerValidator;
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode;
-  TextEditingController? textController2;
+  TextEditingController? textController5;
   late bool passwordVisibility2;
-  String? Function(BuildContext, String?)? textController2Validator;
+  String? Function(BuildContext, String?)? textController5Validator;
 
   /// Initialization and disposal methods.
 
@@ -27,11 +44,20 @@ class ChangePasswordModel extends FlutterFlowModel<ChangePasswordWidget> {
 
   void dispose() {
     unfocusNode.dispose();
+    nameFocusNode?.dispose();
+    nameController?.dispose();
+
+    phoneFocusNode?.dispose();
+    phoneController?.dispose();
+
+    emailAddressFocusNode?.dispose();
+    emailAddressController?.dispose();
+
     passwordFocusNode?.dispose();
     passwordController?.dispose();
 
     textFieldFocusNode?.dispose();
-    textController2?.dispose();
+    textController5?.dispose();
   }
 
   /// Action blocks are added here.
@@ -39,16 +65,16 @@ class ChangePasswordModel extends FlutterFlowModel<ChangePasswordWidget> {
   /// Additional helper methods are added here.
 }
 
-class ChangePasswordWidget extends StatefulWidget {
-  const ChangePasswordWidget({Key? key}) : super(key: key);
+class CreateAccountWidget extends StatefulWidget {
+  const CreateAccountWidget({Key? key}) : super(key: key);
 
   @override
-  _ChangePasswordWidgetState createState() => _ChangePasswordWidgetState();
+  _CreateAccountWidgetState createState() => _CreateAccountWidgetState();
 }
 
-class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
+class _CreateAccountWidgetState extends State<CreateAccountWidget>
     with TickerProviderStateMixin {
-  late ChangePasswordModel _model;
+  late CreateAccountModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -92,12 +118,21 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ChangePasswordModel());
+    _model = createModel(context, () => CreateAccountModel());
+
+    _model.nameController ??= TextEditingController();
+    _model.nameFocusNode ??= FocusNode();
+
+    _model.phoneController ??= TextEditingController();
+    _model.phoneFocusNode ??= FocusNode();
+
+    _model.emailAddressController ??= TextEditingController();
+    _model.emailAddressFocusNode ??= FocusNode();
 
     _model.passwordController ??= TextEditingController();
     _model.passwordFocusNode ??= FocusNode();
 
-    _model.textController2 ??= TextEditingController();
+    _model.textController5 ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
   }
 
@@ -126,6 +161,22 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFFFA113),
+          automaticallyImplyLeading: true,
+          title: Text(
+            'Đăng ký tài khoản',
+            textAlign: TextAlign.center,
+            style: FlutterFlowTheme.of(context).headlineMedium.override(
+                  fontFamily: 'Outfit',
+                  color: Colors.white,
+                  fontSize: 22,
+                ),
+          ),
+          actions: [],
+          centerTitle: true,
+          elevation: 2,
+        ),
         body: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -152,7 +203,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 70, 0, 32),
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                         child: Container(
                           width: 200,
                           height: 70,
@@ -191,7 +242,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Change Password',
+                                    'Create Account',
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.of(context)
                                         .displaySmall,
@@ -200,10 +251,223 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         0, 12, 0, 24),
                                     child: Text(
-                                      'Enter your new password below.',
+                                      'Enter your registration information below.',
                                       textAlign: TextAlign.center,
                                       style: FlutterFlowTheme.of(context)
                                           .labelLarge,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 0, 16),
+                                    child: Container(
+                                      width: double.infinity,
+                                      child: TextFormField(
+                                        controller: _model.nameController,
+                                        focusNode: _model.nameFocusNode,
+                                        autofocus: true,
+                                        autofillHints: [AutofillHints.email],
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          labelText: 'Name',
+                                          labelStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelLarge,
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryBackground,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          filled: true,
+                                          fillColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .primaryBackground,
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyLarge,
+                                        validator: _model
+                                            .nameControllerValidator
+                                            .asValidator(context),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 0, 16),
+                                    child: Container(
+                                      width: double.infinity,
+                                      child: TextFormField(
+                                        controller: _model.phoneController,
+                                        focusNode: _model.phoneFocusNode,
+                                        autofocus: true,
+                                        autofillHints: [AutofillHints.email],
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          labelText: 'Phone Number',
+                                          labelStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelLarge,
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryBackground,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          filled: true,
+                                          fillColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .primaryBackground,
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyLarge,
+                                        validator: _model
+                                            .phoneControllerValidator
+                                            .asValidator(context),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 0, 16),
+                                    child: Container(
+                                      width: double.infinity,
+                                      child: TextFormField(
+                                        controller:
+                                            _model.emailAddressController,
+                                        focusNode: _model.emailAddressFocusNode,
+                                        autofocus: true,
+                                        autofillHints: [AutofillHints.email],
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          labelText: 'Email',
+                                          labelStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelLarge,
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryBackground,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          filled: true,
+                                          fillColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .primaryBackground,
+                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyLarge,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        validator: _model
+                                            .emailAddressControllerValidator
+                                            .asValidator(context),
+                                      ),
                                     ),
                                   ),
                                   Padding(
@@ -219,7 +483,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                                         obscureText:
                                             !_model.passwordVisibility1,
                                         decoration: InputDecoration(
-                                          labelText: 'Current Password',
+                                          labelText: 'Password',
                                           labelStyle:
                                               FlutterFlowTheme.of(context)
                                                   .labelLarge,
@@ -301,14 +565,14 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                                     child: Container(
                                       width: double.infinity,
                                       child: TextFormField(
-                                        controller: _model.textController2,
+                                        controller: _model.textController5,
                                         focusNode: _model.textFieldFocusNode,
                                         autofocus: true,
                                         autofillHints: [AutofillHints.email],
                                         obscureText:
                                             !_model.passwordVisibility2,
                                         decoration: InputDecoration(
-                                          labelText: 'New Password',
+                                          labelText: 'Confirm Password',
                                           labelStyle:
                                               FlutterFlowTheme.of(context)
                                                   .labelLarge,
@@ -382,7 +646,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                                         style: FlutterFlowTheme.of(context)
                                             .bodyLarge,
                                         validator: _model
-                                            .textController2Validator
+                                            .textController5Validator
                                             .asValidator(context),
                                       ),
                                     ),
@@ -394,7 +658,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                                       onPressed: () {
                                         print('Button pressed ...');
                                       },
-                                      text: 'Change',
+                                      text: 'Create Account',
                                       options: FFButtonOptions(
                                         width: double.infinity,
                                         height: 44,
@@ -410,7 +674,6 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                                             .override(
                                               fontFamily: 'Urbanist',
                                               color: Colors.white,
-                                              fontSize: 20,
                                             ),
                                         elevation: 3,
                                         borderSide: BorderSide(
@@ -418,6 +681,47 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                                           width: 1,
                                         ),
                                         borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const LoginAccountWidget()));
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 12, 0, 12),
+                                      child: RichText(
+                                        textScaleFactor: MediaQuery.of(context)
+                                            .textScaleFactor,
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text:
+                                                  'Already have an account?  ',
+                                              style: TextStyle(),
+                                            ),
+                                            TextSpan(
+                                              text: 'Sign in',
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'Urbanist',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                            )
+                                          ],
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium,
+                                        ),
                                       ),
                                     ),
                                   ),

@@ -1,7 +1,10 @@
-import 'package:final_project/screen/change_password.dart';
+import 'package:final_project/providers/user_provider.dart';
+import 'package:final_project/screen/change_password_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class ProfileModel extends FlutterFlowModel<ProfileWidget> {
   ///  State fields for stateful widgets in this page.
@@ -42,6 +45,9 @@ class ProfileWidget extends StatefulWidget {
 }
 
 class _ProfileWidgetState extends State<ProfileWidget> {
+  String displayName = "";
+  String phoneNumber = "";
+
   late ProfileModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -50,13 +56,19 @@ class _ProfileWidgetState extends State<ProfileWidget> {
 
   @override
   void initState() {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    User user = userProvider.user;
+    displayName = user.displayName!;
+    phoneNumber = user.phoneNumber!;
+
     super.initState();
     _model = createModel(context, () => ProfileModel());
 
-    _model.textController1 ??= TextEditingController(text: 'Nguyễn Duy');
+    _model.textController1 ??= TextEditingController(text: displayName);
     _model.textFieldFocusNode1 ??= FocusNode();
 
-    _model.textController2 ??= TextEditingController(text: '0312345678');
+    _model.textController2 ??= TextEditingController(text: phoneNumber);
     _model.textFieldFocusNode2 ??= FocusNode();
   }
 
@@ -69,6 +81,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: true);
+    User? user = userProvider.user;
     if (isiOS) {
       SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
@@ -85,6 +100,22 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFFFA113),
+          automaticallyImplyLeading: true,
+          title: Text(
+            'Trang cá nhân',
+            textAlign: TextAlign.center,
+            style: FlutterFlowTheme.of(context).headlineMedium.override(
+                  fontFamily: 'Outfit',
+                  color: Colors.white,
+                  fontSize: 22,
+                ),
+          ),
+          actions: [],
+          centerTitle: true,
+          elevation: 4,
+        ),
         body: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -170,7 +201,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Text(
-                                            'nduy63228@gmail.com',
+                                            user.email ?? "",
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(

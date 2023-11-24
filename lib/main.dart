@@ -1,4 +1,9 @@
 import 'package:final_project/providers/user_provider.dart';
+import 'package:final_project/screen/create_account.dart';
+import 'package:final_project/screen/home_page_screen.dart';
+import 'package:final_project/screen/change_password_screen.dart';
+import 'package:final_project/screen/login_screen.dart';
+import 'package:final_project/screen/product_list.dart';
 import 'package:final_project/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -37,7 +42,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ProfileWidget(),
+      home: CreateAccountWidget(),
     );
   }
 }
