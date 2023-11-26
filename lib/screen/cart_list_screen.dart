@@ -1,5 +1,7 @@
 import 'package:final_project/models/CartItem.dart';
 import 'package:final_project/models/UserCart.dart';
+import 'package:final_project/providers/user_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,17 +35,22 @@ class _ShoppingcartWidgetState extends State<ShoppingcartWidget> {
     return Provider.of<CartProvider>(context, listen: false).totalPrice();
   }
 
-  payNow() async {
+  void payNow() async {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    User user = userProvider.user;
+
     CartProvider cartProvider =
         Provider.of<CartProvider>(context, listen: false);
+
     List<CartItem> cartItems = cartProvider.cartItems;
 
-    DatabaseReference ref = FirebaseDatabase.instance.ref('history');
-// UserCart userCart = UserCart(userName:"",userId:'',cartList:)
+    if (cartItems.isNotEmpty) {
+      DatabaseReference ref = FirebaseDatabase.instance.ref('history');
+      UserCart userCart = UserCart(user.displayName!, user.uid, cartItems);
 
-    await Future.wait(cartItems.map((CartItem item) async {
-      await ref.push().set(item.toMap());
-    }));
+      await ref.update({"${user.uid}": userCart.toMap()});
+    }
   }
 
   @override
@@ -434,6 +441,151 @@ class _ShoppingcartWidgetState extends State<ShoppingcartWidget> {
                             child: FFButtonWidget(
                               onPressed: () {
                                 payNow();
+                                cartItems.isNotEmpty
+                                    ? showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            content: Container(
+                                              height:
+                                                  180.0, // Set your desired height
+                                              width:
+                                                  300.0, // Set your desired width
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  const Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Icon(
+                                                          Icons.info,
+                                                          size: 50.0,
+                                                          color: Colors.blue,
+                                                        ),
+                                                        SizedBox(height: 8.0),
+                                                        Text(
+                                                          'Payment Success',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontSize: 24.0),
+                                                        ),
+                                                      ]),
+                                                  const SizedBox(height: 16.0),
+                                                  const Text(
+                                                    'Bạn đã thực hiện thanh toán đơn hàng thành công',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontSize: 18.0),
+                                                  ),
+                                                  const SizedBox(height: 16.0),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      primary: Colors.green,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                    ),
+                                                    child: const Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10.0),
+                                                      child: Text('OK',
+                                                          style: TextStyle(
+                                                              fontSize: 18.0)),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        })
+                                    : showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            content: Container(
+                                              height:
+                                                  180.0, // Set your desired height
+                                              width:
+                                                  300.0, // Set your desired width
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  const Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Icon(
+                                                          Icons.close,
+                                                          size: 50.0,
+                                                          color: Colors.red,
+                                                        ),
+                                                        SizedBox(height: 8.0),
+                                                        Text(
+                                                          'Payment Failed',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontSize: 24.0),
+                                                        ),
+                                                      ]),
+                                                  const SizedBox(height: 16.0),
+                                                  const Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                0, 0, 0, 20),
+                                                    child: Text(
+                                                      'Giỏ hàng rỗng!',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontSize: 18.0),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 20.0),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      primary: Colors.green,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                    ),
+                                                    child: const Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10.0),
+                                                      child: Text('OK',
+                                                          style: TextStyle(
+                                                              fontSize: 18.0)),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
                               },
                               text: 'Thanh toán',
                               options: FFButtonOptions(

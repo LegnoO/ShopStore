@@ -76,6 +76,10 @@ class CartProvider extends ChangeNotifier {
     return cartItems;
   }
 
+  void emptyCart() {
+    cartItems = [];
+  }
+
   void printList() {
     print(cartItems);
   }

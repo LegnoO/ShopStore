@@ -12,7 +12,7 @@ class UserProvider extends ChangeNotifier {
 
     currentPassword = password;
     user = userCredential.user!;
-    print(user.uid);
+
     notifyListeners();
   }
 

@@ -1,3 +1,5 @@
+import 'package:final_project/models/CartItem.dart';
+import 'package:final_project/providers/cart_provider.dart';
 import 'package:final_project/providers/user_provider.dart';
 import 'package:final_project/screen/change_password_screen.dart';
 import 'package:final_project/screen/home_page_screen.dart';
@@ -67,8 +69,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   }
 
   void logout() async {
+    CartProvider cartProvider =
+        Provider.of<CartProvider>(context, listen: false);
+    cartProvider.emptyCart();
+
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
+
     try {
       await userProvider.logoutAccount();
       Navigator.push(context,
