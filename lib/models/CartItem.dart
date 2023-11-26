@@ -23,6 +23,23 @@ class CartItem extends Product {
 
   @override
   String toString() {
-    return '{id: $id, name: $name, price: $price, quantity: $quantity,imageUrl: $imageUrl, category: $category, brand: $brand, guaranteed: $guaranteed, color: $color, status: $status, description: $description, best_selling: $best_selling}}';
+    return '{id: $id, name: $name, price: $price, quantity: $quantity,imageUrl: $imageUrl, category: $category, brand: $brand, guaranteed: $guaranteed, color: $color, status: $status, description: $description, best_selling: $best_selling}';
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "name": name,
+      "price": price,
+      "quantity": quantity,
+      "imageUrl": imageUrl,
+      "category": category,
+      "brand": brand,
+      "guaranteed": guaranteed,
+      "color": color,
+      "status": status,
+      "description": description,
+      "best_selling": best_selling
+    };
   }
 }

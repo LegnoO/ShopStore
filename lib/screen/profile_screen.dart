@@ -1,5 +1,7 @@
 import 'package:final_project/providers/user_provider.dart';
 import 'package:final_project/screen/change_password_screen.dart';
+import 'package:final_project/screen/home_page_screen.dart';
+import 'package:final_project/screen/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
@@ -46,13 +48,35 @@ class ProfileWidget extends StatefulWidget {
 
 class _ProfileWidgetState extends State<ProfileWidget> {
   String displayName = "";
-  String phoneNumber = "";
 
   late ProfileModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void updateProfileUser() {}
+  void updateProfileUser() async {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    displayName = _model.textController1.text;
+    try {
+      await userProvider.updateProfile(displayName);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const HomePageWidget()));
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+  }
+
+  void logout() async {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    try {
+      await userProvider.logoutAccount();
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginAccountWidget()));
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+  }
 
   @override
   void initState() {
@@ -60,16 +84,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
         Provider.of<UserProvider>(context, listen: false);
     User user = userProvider.user;
     displayName = user.displayName!;
-    phoneNumber = user.phoneNumber!;
 
     super.initState();
     _model = createModel(context, () => ProfileModel());
 
     _model.textController1 ??= TextEditingController(text: displayName);
     _model.textFieldFocusNode1 ??= FocusNode();
-
-    _model.textController2 ??= TextEditingController(text: phoneNumber);
-    _model.textFieldFocusNode2 ??= FocusNode();
   }
 
   @override
@@ -321,110 +341,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                     ),
                                   ].divide(SizedBox(width: 12)),
                                 ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Text(
-                                          'Phone:',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'Urbanist',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryBackground,
-                                                fontSize: 20,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 200,
-                                          decoration: BoxDecoration(),
-                                          child: TextFormField(
-                                            controller: _model.textController2,
-                                            focusNode:
-                                                _model.textFieldFocusNode2,
-                                            autofocus: true,
-                                            obscureText: false,
-                                            decoration: InputDecoration(
-                                              labelStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium,
-                                              hintStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium,
-                                              enabledBorder:
-                                                  UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .alternate,
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              errorBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .error,
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              focusedErrorBorder:
-                                                  UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .error,
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                            ),
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily: 'Urbanist',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryBackground,
-                                                  fontSize: 20,
-                                                ),
-                                            validator: _model
-                                                .textController2Validator
-                                                .asValidator(context),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ].divide(SizedBox(width: 12)),
-                                ),
                               ].divide(SizedBox(height: 12)),
                             ),
                             Align(
@@ -496,7 +412,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                                 0.00, 0.00),
                                             child: FFButtonWidget(
                                               onPressed: () {
-                                                print('Button pressed ...');
+                                                updateProfileUser();
                                               },
                                               text: 'Save',
                                               options: FFButtonOptions(
@@ -550,7 +466,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                                     12, 0, 12, 0),
                                             child: FFButtonWidget(
                                               onPressed: () {
-                                                print('Button pressed ...');
+                                                logout();
                                               },
                                               text: 'Logout Account',
                                               icon: Icon(

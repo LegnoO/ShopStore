@@ -59,20 +59,26 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
   void changePassword() async {
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
+    String currentPassword = userProvider.currentPassword;
+    String password = _model.passwordController.text;
+    String newPassword = _model.textController2.text;
 
-    if (_model.passwordController == userProvider.currentPassword) {
+    if (password == currentPassword) {
       setState(() {
         isError = false;
       });
-      await userProvider.updatePasswordHandle(_model.textController2);
+      try {
+        await userProvider.updatePasswordHandle(newPassword);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomePageWidget()));
+      } on FirebaseAuthException catch (e) {
+        print(e);
+      }
     } else {
       setState(() {
         isError = true;
       });
     }
-
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const HomePageWidget()));
   }
 
   final animationsMap = {
@@ -456,11 +462,6 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget>
                                     child: FFButtonWidget(
                                       onPressed: () {
                                         changePassword();
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const HomePageWidget()));
                                       },
                                       text: 'Change',
                                       options: FFButtonOptions(

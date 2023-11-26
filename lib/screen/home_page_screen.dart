@@ -1,5 +1,6 @@
 import 'package:final_project/screen/cart_list_screen.dart';
 import 'package:final_project/screen/product_detail_screen.dart';
+import 'package:final_project/screen/product_list.dart';
 import 'package:final_project/screen/profile_screen.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
@@ -398,7 +399,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           ],
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ListProductWidget()));
+                          },
                           child: Text(
                             'See all',
                             style: FlutterFlowTheme.of(context).bodyMedium,

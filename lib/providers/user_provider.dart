@@ -12,17 +12,44 @@ class UserProvider extends ChangeNotifier {
 
     currentPassword = password;
     user = userCredential.user!;
-    // String? refreshToken = user?.refreshToken;
+    print(user.uid);
+    notifyListeners();
+  }
+
+  Future<void> createAccount(name, email, password) async {
+    UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+
+    currentPassword = password;
+    user = userCredential.user!;
+
+    await user.updateDisplayName(name);
+    await user.reload();
+    user = FirebaseAuth.instance.currentUser!;
+
+    notifyListeners();
+  }
+
+  Future<void> logoutAccount() async {
+    await FirebaseAuth.instance.signOut();
+
     notifyListeners();
   }
 
   Future<void> updatePasswordHandle(newPassword) async {
-    await user?.updatePassword(newPassword);
+    await user.updatePassword(newPassword);
 
     notifyListeners();
   }
 
+  Future<void> updateProfile(newName) async {
+    await user.updateDisplayName(newName);
+    await FirebaseAuth.instance.currentUser?.reload();
+    user = FirebaseAuth.instance.currentUser!;
+    notifyListeners();
+  }
+
   bool isLogged() {
-    return user != null;
+    return user.refreshToken != null;
   }
 }

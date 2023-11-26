@@ -1,4 +1,6 @@
 import 'package:final_project/models/CartItem.dart';
+import 'package:final_project/models/UserCart.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +28,22 @@ class ShoppingcartWidget extends StatefulWidget {
 class _ShoppingcartWidgetState extends State<ShoppingcartWidget> {
   late ShoppingcartModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
   int loadScreen() {
     return Provider.of<CartProvider>(context, listen: false).totalPrice();
+  }
+
+  payNow() async {
+    CartProvider cartProvider =
+        Provider.of<CartProvider>(context, listen: false);
+    List<CartItem> cartItems = cartProvider.cartItems;
+
+    DatabaseReference ref = FirebaseDatabase.instance.ref('history');
+// UserCart userCart = UserCart(userName:"",userId:'',cartList:)
+
+    await Future.wait(cartItems.map((CartItem item) async {
+      await ref.push().set(item.toMap());
+    }));
   }
 
   @override
@@ -417,9 +433,9 @@ class _ShoppingcartWidgetState extends State<ShoppingcartWidget> {
                                 EdgeInsetsDirectional.fromSTEB(20, 16, 20, 0),
                             child: FFButtonWidget(
                               onPressed: () {
-                                print('Button pressed ...');
+                                payNow();
                               },
-                              text: 'Button',
+                              text: 'Thanh toán',
                               options: FFButtonOptions(
                                 width: double.infinity,
                                 height: 60,

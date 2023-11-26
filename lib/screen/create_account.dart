@@ -1,11 +1,12 @@
+import 'package:final_project/providers/user_provider.dart';
+import 'package:final_project/screen/home_page_screen.dart';
 import 'package:final_project/screen/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
@@ -16,10 +17,7 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
   FocusNode? nameFocusNode;
   TextEditingController? nameController;
   String? Function(BuildContext, String?)? nameControllerValidator;
-  // State field(s) for phone widget.
-  FocusNode? phoneFocusNode;
-  TextEditingController? phoneController;
-  String? Function(BuildContext, String?)? phoneControllerValidator;
+
   // State field(s) for emailAddress widget.
   FocusNode? emailAddressFocusNode;
   TextEditingController? emailAddressController;
@@ -47,9 +45,6 @@ class CreateAccountModel extends FlutterFlowModel<CreateAccountWidget> {
     nameFocusNode?.dispose();
     nameController?.dispose();
 
-    phoneFocusNode?.dispose();
-    phoneController?.dispose();
-
     emailAddressFocusNode?.dispose();
     emailAddressController?.dispose();
 
@@ -75,8 +70,40 @@ class CreateAccountWidget extends StatefulWidget {
 class _CreateAccountWidgetState extends State<CreateAccountWidget>
     with TickerProviderStateMixin {
   late CreateAccountModel _model;
+  bool isError = false;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  Future<void> _createAccount() async {
+    isError = false;
+    String email = _model.emailAddressController.text;
+    String password = _model.passwordController.text;
+    String confirmPassword = _model.textController5.text;
+    String name = _model.nameController.text;
+
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+
+    if (password == confirmPassword) {
+      try {
+        await userProvider.createAccount(name, email, password);
+        setState(() {
+          isError = false;
+          if (userProvider.isLogged()) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const HomePageWidget()));
+          }
+        });
+      } on FirebaseAuthException catch (e) {
+        setState(() {
+          isError = true;
+        });
+      }
+    } else {
+      isError = true;
+    }
+  }
 
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
@@ -122,9 +149,6 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget>
 
     _model.nameController ??= TextEditingController();
     _model.nameFocusNode ??= FocusNode();
-
-    _model.phoneController ??= TextEditingController();
-    _model.phoneFocusNode ??= FocusNode();
 
     _model.emailAddressController ??= TextEditingController();
     _model.emailAddressFocusNode ??= FocusNode();
@@ -323,76 +347,6 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget>
                                             .bodyLarge,
                                         validator: _model
                                             .nameControllerValidator
-                                            .asValidator(context),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 0, 16),
-                                    child: Container(
-                                      width: double.infinity,
-                                      child: TextFormField(
-                                        controller: _model.phoneController,
-                                        focusNode: _model.phoneFocusNode,
-                                        autofocus: true,
-                                        autofillHints: [AutofillHints.email],
-                                        obscureText: false,
-                                        decoration: InputDecoration(
-                                          labelText: 'Phone Number',
-                                          labelStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelLarge,
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryBackground,
-                                              width: 2,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              width: 2,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          errorBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .alternate,
-                                              width: 2,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          focusedErrorBorder:
-                                              OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .alternate,
-                                              width: 2,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          filled: true,
-                                          fillColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .primaryBackground,
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyLarge,
-                                        validator: _model
-                                            .phoneControllerValidator
                                             .asValidator(context),
                                       ),
                                     ),
@@ -651,12 +605,37 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget>
                                       ),
                                     ),
                                   ),
+                                  Align(
+                                    alignment:
+                                        AlignmentDirectional(-1.00, 0.00),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0, 0, 0, 16),
+                                      child: isError
+                                          ? Text(
+                                              "Mật khẩu không trùng khớp!",
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'Urbanist',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .error,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                            )
+                                          : null,
+                                    ),
+                                  ),
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         0, 0, 0, 16),
                                     child: FFButtonWidget(
                                       onPressed: () {
-                                        print('Button pressed ...');
+                                        _createAccount();
                                       },
                                       text: 'Create Account',
                                       options: FFButtonOptions(

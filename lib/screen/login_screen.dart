@@ -65,6 +65,7 @@ class _LoginAccountWidgetState extends State<LoginAccountWidget>
 
     try {
       await userProvider.login(email, password);
+
       setState(() {
         isError = false;
       });
