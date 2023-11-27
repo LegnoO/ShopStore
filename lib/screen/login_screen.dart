@@ -65,6 +65,9 @@ class _LoginAccountWidgetState extends State<LoginAccountWidget>
 
     try {
       await userProvider.login(email, password);
+      
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const HomePageWidget()));
 
       setState(() {
         isError = false;
@@ -76,10 +79,7 @@ class _LoginAccountWidgetState extends State<LoginAccountWidget>
       });
     }
 
-    if (userProvider.isLogged()) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const HomePageWidget()));
-    }
+    if (userProvider.isLogged()) {}
 
     // user?.updateDisplayName("test");
   }
