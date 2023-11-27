@@ -37,6 +37,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> updatePasswordHandle(newPassword) async {
+    currentPassword = newPassword;
     await user.updatePassword(newPassword);
 
     notifyListeners();

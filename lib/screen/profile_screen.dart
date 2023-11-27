@@ -1,4 +1,3 @@
-import 'package:final_project/models/CartItem.dart';
 import 'package:final_project/providers/cart_provider.dart';
 import 'package:final_project/providers/user_provider.dart';
 import 'package:final_project/screen/change_password_screen.dart';

@@ -184,7 +184,10 @@ class _ShoppingcartWidgetState extends State<ShoppingcartWidget> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Container(
-                                                      width: 280,
+                                                      width: MediaQuery.sizeOf(
+                                                                  context)
+                                                              .width *
+                                                          0.6,
                                                       decoration:
                                                           BoxDecoration(),
                                                       child: Text(
@@ -203,7 +206,7 @@ class _ShoppingcartWidgetState extends State<ShoppingcartWidget> {
                                                                 ),
                                                         overflow: TextOverflow
                                                             .ellipsis,
-                                                        maxLines: 1,
+                                                        maxLines: 2,
                                                       ),
                                                     ),
                                                   ],

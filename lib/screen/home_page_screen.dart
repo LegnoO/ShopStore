@@ -7,12 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:final_project/component/bottom_navigation_bar.dart';
-import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
     as smooth_page_indicator;
-import 'package:final_project/models/CartItem.dart';
 import 'package:final_project/models/Product.dart';
-import 'package:final_project/providers/cart_provider.dart';
 
 class HomePageModel extends FlutterFlowModel<HomePageWidget> {
   final unfocusNode = FocusNode();

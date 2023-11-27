@@ -3,7 +3,6 @@ import 'package:final_project/screen/home_page_screen.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:final_project/component/bottom_navigation_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:final_project/models/CartItem.dart';
 import 'package:final_project/providers/cart_provider.dart';
