@@ -224,7 +224,7 @@ class _LoginAccountWidgetState extends State<LoginAccountWidget>
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Login Screen',
+                                    'Login Account',
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.of(context)
                                         .displaySmall,

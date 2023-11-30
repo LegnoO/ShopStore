@@ -98,7 +98,6 @@ class _ListProductWidgetState extends State<ListProductWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print("width: ${MediaQuery.of(context).size.width}, height: ${MediaQuery.of(context).size.height}");
     if (isiOS) {
       SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
