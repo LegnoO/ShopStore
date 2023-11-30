@@ -251,9 +251,9 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                               fontWeight: FontWeight.bold,
                                             ),
                                       ),
-                                      const TextSpan(
+                                       TextSpan(
                                         text:
-                                            '(9310-70234076) sở hữu dòng Intel Core i5-1135G7 thế hệ thứ 11, màn hình 13.4 inches WVA, RAM 8GB LPDDR4X 3200MHz cùng card đồ họa tích hợp Intel Iris Xe Graphics, mang đến những tính năng tuyệt vời cho người sử dụng',
+                                            widget.product.description,
                                         style: TextStyle(),
                                       )
                                     ],
@@ -297,7 +297,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
-                                                  text: 'Thương hiệu:    ',
+                                                  text: 'Thương hiệu:     ',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -372,7 +372,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
-                                                  text: 'Tình trạng           ',
+                                                  text: 'Tình trạng:         ',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -409,7 +409,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
-                                                  text: 'Bảo hành            ',
+                                                  text: 'Bảo hành:           ',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -447,7 +447,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
-                                                  text: 'Màu sắc:            ',
+                                                  text: 'Màu sắc:             ',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
